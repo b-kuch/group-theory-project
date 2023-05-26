@@ -1,5 +1,10 @@
 # based on https://en.wikipedia.org/wiki/Non-commutative_cryptography#Protocols_for_encryption_and_decryption
 
+LoadDynamicModule("/home/bart/gtp/xor.so");
+MyHash := function(data) 
+    return data;
+end;
+
 GROUP_SIZE := 256;
 grp := SymmetricGroup(GROUP_SIZE);
 
@@ -8,14 +13,17 @@ B := ;
 
 x := ;
 
+# Bob
 b := element from A; # secret
 z = x^b; # public
 
+# Alice
 r := random element from B;
 t := z^r;
 
 m := "message";
-C = rec(x^r, hash(t) xor m);
+C = rec(key:=x^r, message:=MyXor(Hash(t), m));
 
-received_t := C[0]^b;
-decrypted = rec[1] xor hash(received_t);
+# Bob
+received_t := C.key^b;
+decrypted = MyXor(rec[1], Hash(received_t));
