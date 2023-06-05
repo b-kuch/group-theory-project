@@ -13,6 +13,13 @@ Obj xor(Obj self, Obj A, Obj B)
     len_a = LEN_PLIST(A);   
     len_b = LEN_PLIST(B);
 
+    if (len_a > len_b){
+		max_len = len_a;
+    }
+    else {
+		max_len = len_b;
+    }
+	
     a = (unsigned char*)calloc(max_len, sizeof(*a));
     b = (unsigned char*)calloc(max_len, sizeof(*b));
     c = (unsigned char*)malloc(max_len*sizeof(*c));
