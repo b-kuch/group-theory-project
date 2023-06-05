@@ -1,8 +1,15 @@
-# based on https://en.wikipedia.org/wiki/Non-commutative_cryptography#Protocols_for_encryption_and_decryption
-
 LoadDynamicModule("/home/bart/gtp/xor.so");
-MyHash := function(data) 
-    return data;
+
+Hash := function(perm)
+    return HexSHA256(String(perm));
+end;
+
+ToChars := function(str)
+    return List(str, IntChar);
+end;
+
+Xor := function(str1, str2)
+    return _Xor(ToChars(str1), ToChars(str2));
 end;
 
 RandomInRange := function(startInclusive, endInclusive)
@@ -18,18 +25,8 @@ OffsetSymmetricGroup := function(startExclusive, endInclusive)
     return Group(g1, g2);
 end;
 
-Hash := function(perm)
-    return HexSHA256(String(perm));
-end;
 
-ToChars := function(str)
-    return List(str, IntChar);
-end;
-
-Xor := function(str1, str2)
-    return _Xor(ToChars(str1), ToChars(str2));
-end;
-
+# based on https://en.wikipedia.org/wiki/Non-commutative_cryptography#Protocols_for_encryption_and_decryption
 
 # Algorithm
 
