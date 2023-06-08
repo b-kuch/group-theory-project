@@ -36,11 +36,6 @@ grp := SymmetricGroup(GROUP_SIZE);
 groupSplitIndex := RandomInRange(120, 136);
 A := SymmetricGroup(groupSplitIndex);
 B := OffsetSymmetricGroup(groupSplitIndex, GROUP_SIZE);
-if CheckIfGroupsAreCommutative(A, B) then
-    Print("Subgroups A and B are commutative.");
-else
-    Print("Subgroups A and B are not commutative, this is an error.");
-fi;
 
 x := Random(A)*Random(B);
 
@@ -54,11 +49,11 @@ t := z^r;
 
 m := "message";
 hashedT := Hash(t);
-C = rec(key:=x^r, message:=Xor(Hash(t), m));
+C := rec(key:=x^r, message:=Xor(Hash(t), m));
 
 # Bob
 receivedT := C.key^b;
-decrypted = Xor(Xor(Hash(receivedT), C.message), receivedT);
+decrypted := Xor(Xor(Hash(receivedT), C.message), receivedT);
 Print(decrypted);
 
 # fin.
