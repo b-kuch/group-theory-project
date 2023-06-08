@@ -58,7 +58,7 @@ Obj xor(Obj self, Obj A, Obj B)
  */
 static StructGVarFunc GVarFunc[] = {
   
-  { "MyXor", 2, "a, b", xor, "xor.c:xor" },
+  { "_Xor", 2, "a, b", xor, "xor.c:xor" },
   { 0 }
 };
 
