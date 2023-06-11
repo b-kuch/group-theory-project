@@ -44,7 +44,7 @@ C := rec(key:=x^r, message:=Xor(List(Hash(t), IntChar), List(m, IntChar)));
 
 # Bob
 receivedT := C.key^b;
-decrypted := Xor(C.message, List(Hash(t), IntChar)); 
+decrypted := Xor(C.message, List(Hash(receivedT), IntChar)); 
 Print(List(decrypted, CharInt));
 
 # fin.
