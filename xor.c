@@ -1,53 +1,49 @@
 #include "src/compiled.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 Obj xor(Obj self, Obj A, Obj B)
 {
+    int len_a = LEN_PLIST(A);   
+    int len_b = LEN_PLIST(B);
+
+    int bigger_len, smaller_len;
+    Obj bigger, smaller;
+
+    if (len_a > len_b) {
+      bigger_len = len_a;
+      smaller_len = len_b;
+
+      bigger = A;
+      smaller = B;
+    } else {
+      bigger_len = len_b;
+      smaller_len = len_a;
+
+      bigger = B;
+      smaller = A;
+    }
+
+    int offset = bigger_len - smaller_len;
+    unsigned char *c = (unsigned char*)malloc(bigger_len*sizeof(*c));
+    memset(c, 0, bigger_len);
+
+    for (int i = 0; i < bigger_len; i++) {
+        unsigned char a = INT_INTOBJ(ELM_PLIST(bigger, i+1));
+        unsigned char b = i < offset ? 0 : INT_INTOBJ(ELM_PLIST(smaller, i+1-offset));
+        c[i] = a ^ b;
+    }
     
-    unsigned char *a, *b, *c;
-    Obj C;
-    int max_len = 256;
-    int len_a, len_b, i;
-
-    len_a = LEN_PLIST(A);   
-    len_b = LEN_PLIST(B);
-
-    if (len_a > len_b){
-	max_len = len_a;
-    }
-    else {
-	max_len = len_b;
-    }
-	
-    a = (unsigned char*)calloc(max_len, sizeof(*a));
-    b = (unsigned char*)calloc(max_len, sizeof(*b));
-    c = (unsigned char*)malloc(max_len*sizeof(*c));
-
-    for (i = 0; i < len_a; i++) {
-        a[i] = INT_INTOBJ(ELM_PLIST(A, i+1));
-    }
-
-    for (i = 0; i < len_b; i++) {
-        b[i] = INT_INTOBJ(ELM_PLIST(B, i+1));
-    }
-
-    for (i = 0; i < max_len; i++) {
-        c[i] = a[i] ^ b[i];
-    }
-
-    C = NEW_PLIST( T_PLIST, max_len);
-    SET_LEN_PLIST(C, (Int)max_len);
+    Obj C = NEW_PLIST( T_PLIST, bigger_len);
+    SET_LEN_PLIST(C, (Int)bigger_len);
   
 
-    for (i = 0; i < max_len; i++) {
-        SET_ELM_PLIST( C, i+1, INTOBJ_INT( c[i] ) );
-	CHANGED_BAG( C );
+    for (int i = 0; i < bigger_len; i++) {
+      SET_ELM_PLIST( C, i+1, INTOBJ_INT( c[i] ) );
+	    CHANGED_BAG( C );
     }
     
-    
-    free(a);
-    free(b);
     free(c);
 
     return C;
