@@ -1,15 +1,7 @@
-LoadDynamicModule("/home/bart/gtp/xor.so");
+LoadDynamicModule("./xor.so");
 
 Hash := function(perm)
     return HexSHA256(String(perm));
-end;
-
-ToChars := function(str)
-    return List(str, IntChar);
-end;
-
-Xor := function(str1, str2)
-    return _Xor(ToChars(str1), ToChars(str2));
 end;
 
 RandomInRange := function(startInclusive, endInclusive)
@@ -47,13 +39,12 @@ z := x^b; # public
 r := Random(B);
 t := z^r;
 
-m := "message";
-hashedT := Hash(t);
-C := rec(key:=x^r, message:=Xor(Hash(t), m));
+m := "message1";
+C := rec(key:=x^r, message:=Xor(List(Hash(t), IntChar), List(m, IntChar)));
 
 # Bob
 receivedT := C.key^b;
-decrypted := Xor(Xor(Hash(receivedT), C.message), receivedT);
-Print(decrypted);
+decrypted := Xor(C.message, List(Hash(t), IntChar)); 
+Print(List(decrypted, CharInt));
 
 # fin.
